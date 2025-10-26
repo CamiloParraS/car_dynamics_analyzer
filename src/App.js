@@ -1,76 +1,126 @@
-import React, { useState } from 'react';
-import vehiclesData from './data/vehicles.json';
+import React, { useState, useEffect } from "react";
+import vehiclesData from "./data/vehicles.json";
 
-const App = () => {
-  const vehicles = vehiclesData.vehicles;
-  const [selectedVehicles, setSelectedVehicles] = useState([]);
 
-  const handleSelect = (vehicleName) => {
-    if (selectedVehicles.includes(vehicleName)) {
-      setSelectedVehicles(selectedVehicles.filter(name => name !== vehicleName));
-    } else {
-      setSelectedVehicles([...selectedVehicles, vehicleName]);
+export default function CarComparisonApp() {
+  const [vehicles, setVehicles] = useState([]);
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+  setVehicles(vehiclesData.vehicles);
+  if (vehiclesData.vehicles.length > 0) {
+    setSelected([vehiclesData.vehicles[0].name]);
+  }
+}, []);
+
+
+  const addVehicle = (name) => {
+    if (selected.length < 4 && !selected.includes(name)) {
+      setSelected([...selected, name]);
     }
   };
 
-  const getVehicleDetails = (name) => {
-    return vehicles.find(v => v.name === name);
+  const removeVehicle = (name) => {
+    setSelected(selected.filter((v) => v !== name));
   };
 
+  const getVehicle = (name) => vehicles.find((v) => v.name === name);
+
+  const available = vehicles.filter((v) => !selected.includes(v.name));
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Simulador de Downforce</h1>
-      
-      {/* Lista de vehículos */}
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Selecciona Vehículos</h2>
-        <ul className="space-y-2">
-          {vehicles.map((vehicle) => (
-            <li key={vehicle.name} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedVehicles.includes(vehicle.name)}
-                onChange={() => handleSelect(vehicle.name)}
-                className="mr-2"
-              />
-              <span>{vehicle.name}</span>
-            </li>
-          ))}
-        </ul>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        Comparador de Vehículos
+      </h1>
+
+      {/* === Tabla de comparación (máx 4 columnas) === */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        {selected.map((name) => {
+          const v = getVehicle(name);
+          if (!v) return null;
+          return (
+            <div
+              key={v.name}
+              className="bg-white rounded-2xl shadow-md p-4 flex flex-col items-center relative"
+            >
+              <button
+                onClick={() => removeVehicle(v.name)}
+                className="absolute top-2 right-3 text-red-500 text-lg"
+              >
+                ✕
+              </button>
+              {v.image ? (
+                <img
+                  src={v.image}
+                  alt={v.name}
+                  className="h-32 object-cover rounded-lg mb-3"
+                />
+              ) : (
+                <div className="h-32 w-full bg-gray-200 rounded-lg mb-3 flex items-center justify-center text-gray-500">
+                  Sin imagen
+                </div>
+              )}
+              <h2 className="font-semibold text-center mb-3">{v.name}</h2>
+
+              <table className="text-sm w-full border-t border-gray-200">
+                <tbody>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">Masa</td>
+                    <td className="p-1 text-right">{v.m} kg</td>
+                  </tr>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">F0</td>
+                    <td className="p-1 text-right">{v.F0} N</td>
+                  </tr>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">c</td>
+                    <td className="p-1 text-right">{v.c}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">kd</td>
+                    <td className="p-1 text-right">{v.kd}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">kz</td>
+                    <td className="p-1 text-right">{v.kz}</td>
+                  </tr>
+                  <tr>
+                    <td className="p-1 font-medium text-gray-600">cz</td>
+                    <td className="p-1 text-right">{v.cz}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+
+        {/* === Espacio para agregar nuevos vehículos === */}
+        {selected.length < 4 && (
+          <div className="bg-gray-100 rounded-2xl shadow-inner p-6 flex flex-col items-center justify-center">
+            <h3 className="text-lg font-semibold mb-3 text-gray-700">
+              Añadir vehículo
+            </h3>
+            <select
+              className="border rounded-lg p-2 w-full text-center mb-3"
+              onChange={(e) => {
+                if (e.target.value) addVehicle(e.target.value);
+                e.target.value = "";
+              }}
+            >
+              <option value="">Seleccionar...</option>
+              {available.map((v) => (
+                <option key={v.name} value={v.name}>
+                  {v.name}
+                </option>
+              ))}
+            </select>
+            <div className="text-gray-400 text-sm text-center">
+              Puedes comparar hasta 4 vehículos.
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Información de vehículos seleccionados */}
-      {selectedVehicles.length > 0 && (
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {selectedVehicles.map((name) => {
-            const details = getVehicleDetails(name);
-            return (
-              <div key={name} className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4">{name}</h3>
-                <ul className="space-y-1">
-                  <li>Masa (m): {details.m} kg</li>
-                  <li>Fuerza Motor (F0): {details.F0} N</li>
-                  <li>Coef. Resistencia (c): {details.c} N·s/m</li>
-                  <li>Const. Downforce (kd): {details.kd} N·s²/m²</li>
-                  <li>Rigidez Susp. (kz): {details.kz} N/m</li>
-                  <li>Amortiguamiento (cz): {details.cz} N·s/m</li>
-                </ul>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Sección para comparaciones (placeholder por ahora) */}
-      {selectedVehicles.length > 1 && (
-        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Comparaciones</h2>
-          <p className="text-gray-600">Aquí irán las gráficas de v(t), D(t) y z(t) para los vehículos seleccionados. En el próximo paso, integraremos las simulaciones.</p>
-          {/* Aquí agregarás las gráficas más adelante */}
-        </div>
-      )}
     </div>
   );
-};
-
-export default App;
+}
