@@ -14,7 +14,7 @@
       "F0": 19000,
       "c": 215,
       "kd": 2.0,
-      "image": "https://files.porsche.com/filestore/image/multimedia/none/992-gt3-modelimage-sideshot/model/0c1b2c0b-8b2e-11eb-80d3-005056bbdc38/porsche-model.png"
+      "image": "https://cdn.topgear.es/sites/navi.axelspringer.es/public/media/image/2023/03/prueba-porsche-911-gt3-2986562.jpg?tf=3840xhttps://images.caricos.com/p/porsche/2022_porsche_911_gt3/images/2560x1440/2022_porsche_911_gt3_63_2560x1440.jpg"
     },
     {
       "name": "Toyota Camry 2025",
@@ -22,7 +22,7 @@
       "F0": 11200,
       "c": 192,
       "kd": 0.38,
-      "image": "https://www.toyota.com/imgix/responsive/images/mlp/colorizer/2025/camry/xse/3TMCZ5AN2SM40C494/040.png"
+      "image": "https://www.2025toyota.com/wp-content/uploads/2023/05/Toyota-Camry-2025-Exterior.png"
     },
     {
       "name": "Bugatti Chiron",
@@ -30,7 +30,7 @@
       "F0": 55950,
       "c": 479,
       "kd": 3.0,
-      "image": "https://www.bugatti.com/fileadmin/_processed_/sei/p1/se-image-0e8b2b8b8b2e4e0b9b9f7c9a2e3e5f1d.jpg"
+      "image": "https://bordalo.observador.pt/v2/q:60/rs:fill:1440/c:2000:1334:nowe:0:0/plain/https://s3.observador.pt/wp-content/uploads/2017/12/10182531/02_chiron_34-front_web.jpg"
     },
     {
       "name": "Toyota Yaris WRC",
@@ -38,7 +38,7 @@
       "F0": 14150,
       "c": 254,
       "kd": 2.5,
-      "image": "https://www.toyota-gazoo.com/global/en/motorsports/wrc/yaris-wrc/images/yaris-wrc-01.jpg"
+      "image": "https://toyotagazooracing.com/pages/contents/en/wrc/report/images/2019/03/photo-day1-05.jpg"
     },
     {
       "name": "Ferrari F2004",
@@ -46,7 +46,7 @@
       "F0": 33550,
       "c": 345,
       "kd": 5.5,
-      "image": "https://www.ferrari.com/en-EN/formula1/f2004"
+      "image": "https://tse2.mm.bing.net/th/id/OIP.59lQQxQCIuzx6Wy_-1-jMwHaFj?rs=1&pid=ImgDetMain&o=7&rm=3"
     },
     {
       "name": "Renault Twingo",
@@ -54,7 +54,7 @@
       "F0": 3350,
       "c": 65,
       "kd": 0.4,
-      "image": "https://www.renault.com/content/dam/Renault/brand/vehicles/twingo/twingo-e-tech-electric.jpg"
+      "image": "https://www.km77.com/revista/wp-content/files/2014/03/Twingo-I.jpg"
     }
   ]
 }
