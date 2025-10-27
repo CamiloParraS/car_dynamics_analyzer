@@ -26,11 +26,12 @@ function downforcePercent(D, { m }) {
   return (D / (m * 9.81)) * 100;
 }
 
-function generateData(vehicle, maxVel = 80, dt = 0.2) {
+function generateData(vehicle, dt = 0.2) {
   const data = [];
+  const v_inf = vehicle.F0 / vehicle.c; // max theoretical speed
   for (let t = 0; ; t += dt) {
     const v = calcVelocity(t, vehicle);
-    if (v >= maxVel) break;
+    if (v >= v_inf) break; // 
     const D = calcDownforce(v, vehicle);
     const p = downforcePercent(D, vehicle);
     data.push({ t, v, D, p });
@@ -65,14 +66,26 @@ export default function CarComparisonApp() {
   const getVehicle = (name) => vehicles.find((v) => v.name === name);
   const available = vehicles.filter((v) => !selected.includes(v.name));
 
-  // ✅ Memoizar cálculos para evitar recomputar en cada render
   const chartData = useMemo(() => {
     const all = {};
+
+    // Find the car with the highest max speed
+    let globalMaxSpeed = 0;
     selected.forEach((name) => {
-      const v = getVehicle(name);
-      if (v) all[name] = generateData(v, 80, 0.5);
+      const v = vehicles.find((x) => x.name === name);
+      if (v) {
+        const v_inf = v.F0 / v.c;
+        if (v_inf > globalMaxSpeed) globalMaxSpeed = v_inf;
+      }
     });
-    return all;
+
+    // Generate data for each selected car
+    selected.forEach((name) => {
+      const v = vehicles.find((x) => x.name === name);
+      if (v) all[name] = generateData(v, globalMaxSpeed, 0.5);
+    });
+
+    return { all, globalMaxSpeed };
   }, [selected, vehicles]);
 
   return (
@@ -169,9 +182,11 @@ export default function CarComparisonApp() {
           <LineChart margin={{ top: 20, right: 20, left: 10, bottom: 10 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="v"
+              dataKey="t"
+              type="number"
+              domain={[0, "auto"]}
               label={{
-                value: "Velocidad (m/s)",
+                value: "Tiempo (s)",
                 position: "insideBottom",
                 dy: 10,
               }}
@@ -187,14 +202,16 @@ export default function CarComparisonApp() {
             <Legend />
             {selected.map((name, idx) => (
               <Line
-                key={name}
+                key={`${name}-v`}
+                yAxisId="left"
                 type="monotone"
-                data={chartData[name]}
-                dataKey="D"
-                name={name}
+                data={chartData.all[name]}
+                dataKey="v"
+                name={`${name} Velocidad`}
                 stroke={COLORS[idx % COLORS.length]}
                 strokeWidth={2}
                 dot={false}
+                strokeDasharray="4 2"
               />
             ))}
           </LineChart>
